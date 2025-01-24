@@ -19,11 +19,22 @@ class _HomepageState extends State<Homepage> {
     context.read<UserBloc>().add(LoadAllUsersEvent());
   }
 
+  void _refreshData() {
+    // Dispatch the event to reload users data
+    context.read<UserBloc>().add(LoadAllUsersEvent());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("Swing Quest"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: _refreshData, // Call _refreshData when button is pressed
+          ),
+        ],
       ),
       body: BlocBuilder<UserBloc, UserState>(
         builder: (context, state) {
