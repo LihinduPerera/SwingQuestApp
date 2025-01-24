@@ -1,20 +1,13 @@
+import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
+import 'package:swing_quest/api_client.dart';
+import 'package:swing_quest/api_handler.dart';
+import 'package:swing_quest/app.dart';
+import 'package:swing_quest/dioClient.dart';
 import 'package:swing_quest/pages/homePage.dart';
 
 void main() {
-  runApp(const MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Swing Quest',
-      home: const Homepage(),
-    );
-  }
+  final dioClient = DioClient();
+  final apiClient = ApiClient(dioClient: dioClient);
+  runApp( MyApp(dioClient: dioClient, apiClient: apiClient,));
 }
