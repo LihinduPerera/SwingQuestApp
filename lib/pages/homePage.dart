@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:swing_quest/userBloc/user_bloc.dart';
-import 'package:swing_quest/userBloc/user_event.dart';
-import 'package:swing_quest/userBloc/user_state.dart';
+import 'package:swing_quest/questionBloc/question_Bloc.dart';
+import 'package:swing_quest/questionBloc/question_state.dart';
+import 'package:swing_quest/questionBloc/question_event.dart'; // Assuming this contains LoadQuestionsEvent
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -12,14 +12,22 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
+  int? selectedAnswer;  // Variable to store the selected answer
+  int questionIndex = 0; // Track which question is displayed
+
   @override
   void initState() {
     super.initState();
-    context.read<UserBloc>().add(LoadAllUsersEvent());
+    // Load the questions when the widget initializes
+    context.read<QuestionBloc>().add(LoadQuestionsEvent());
   }
 
-  void _refreshData() {
-    context.read<UserBloc>().add(LoadAllUsersEvent());
+  // To move to the next question
+  void _nextQuestion() {
+    setState(() {
+      questionIndex++;
+      selectedAnswer = null;  // Reset selected answer for the next question
+    });
   }
 
   @override
@@ -27,38 +35,50 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Swing Quest"),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.refresh),
-            onPressed: _refreshData,
-          ),
-        ],
       ),
-      body: BlocBuilder<UserBloc, UserState>(
-        builder: (context, state) {
-          if (state is UserLoading) {
+      body: BlocBuilder<QuestionBloc, QuestionState>(
+        builder: (context, questionState) {
+          if (questionState is QuestionLoading) {
             return Center(child: CircularProgressIndicator());
-          } else if (state is UserLoaded) {
-            return Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    itemCount: state.user.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final user = state.user[index];
-                      return ListTile(
-                        title: Text(user.name),
-                        subtitle: Text(user.correctAnswersCount?.toString() ?? 'No count'), // Handle null
-                      );
-                    },
+          } else if (questionState is QuestionLoaded) {
+            final questions = questionState.questions;
+
+            if (questionIndex < questions.length) {
+              final question = questions[questionIndex];
+
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Text(
+                      question.question,  // Display the question
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
                   ),
-                ),
-              ],
-            );
-          } else if (state is UserError) {
-            return Center(child: Text('Error: ${state.message}'));
+                  ...List.generate(4, (i) {
+                    return ListTile(
+                      title: Text(question.answers[i]),  // Display the possible answers
+                      onTap: () {
+                        setState(() {
+                          selectedAnswer = i + 1;  // Save answer index (1, 2, 3, or 4)
+                        });
+                      },
+                      tileColor: selectedAnswer == i + 1 ? Colors.blue : null,  // Highlight selected answer
+                    );
+                  }),
+                  ElevatedButton(
+                    onPressed: _nextQuestion,
+                    child: Text("Next Question"),
+                  ),
+                ],
+              );
+            } else {
+              return Center(child: Text("No more questions available."));
+            }
+          } else if (questionState is QuestionError) {
+            return Center(child: Text('Error: ${questionState.message}'));
           }
-          return Center(child: Text('No users available.'));
+          return Center(child: Text('Press to Load Questions'));
         },
       ),
     );

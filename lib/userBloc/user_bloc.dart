@@ -1,5 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:swing_quest/userBloc/userRepository.dart';
+import 'package:swing_quest/userBloc/repository/userRepository.dart';
 import 'user_event.dart';
 import 'user_state.dart';
 

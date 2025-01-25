@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swing_quest/api_client.dart';
-import 'package:swing_quest/api_handler.dart';
 import 'package:swing_quest/dioClient.dart';
 import 'package:swing_quest/pages/homePage.dart';
-import 'package:swing_quest/userBloc/userRepository.dart';
+import 'package:swing_quest/questionBloc/question_Bloc.dart';
+import 'package:swing_quest/questionBloc/repository/questionRepository.dart';
+import 'package:swing_quest/userBloc/repository/userRepository.dart';
 import 'package:swing_quest/userBloc/user_bloc.dart';
 
 class MyApp extends StatelessWidget {
@@ -24,11 +25,21 @@ class MyApp extends StatelessWidget {
         RepositoryProvider<UserRepository>(
           create: (context) => UserRepositoryImpl(apiClient: apiClient),
         ),
+        RepositoryProvider<QuestionRepository>(
+          create: (context) => QuestionRepositoryImpl(apiClient: apiClient),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => UserBloc(userRepository: context.read<UserRepository>()),
+          BlocProvider<UserBloc>(
+            create: (context) => UserBloc(
+              userRepository: context.read<UserRepository>(),
+            ),
+          ),
+          BlocProvider<QuestionBloc>(
+            create: (context) => QuestionBloc(
+              questionRepository: context.read<QuestionRepository>(),
+            ),
           ),
         ],
         child: MaterialApp(
