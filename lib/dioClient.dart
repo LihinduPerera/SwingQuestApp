@@ -2,10 +2,11 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:swing_quest/api_ngrokUrl.dart';
 
 class DioClient {
   late final Dio _dio;
-  static const String baseUrl = 'https://1d6d-203-189-189-144.ngrok-free.app';
+  static String baseUrl = ngrokUrl;
 
   DioClient() {
     _dio = Dio(BaseOptions(

@@ -35,7 +35,7 @@
 //   List<Object> get props => [message];
 // }
 import 'package:equatable/equatable.dart';
-import 'package:swing_quest/models/testModel.dart';
+import 'package:swing_quest/models/userModel.dart';
 
 abstract class UserState extends Equatable {
   @override

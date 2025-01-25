@@ -15,12 +15,10 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
-    // Dispatch the LoadAllUsersEvent when the page loads
     context.read<UserBloc>().add(LoadAllUsersEvent());
   }
 
   void _refreshData() {
-    // Dispatch the event to reload users data
     context.read<UserBloc>().add(LoadAllUsersEvent());
   }
 
@@ -32,7 +30,7 @@ class _HomepageState extends State<Homepage> {
         actions: [
           IconButton(
             icon: Icon(Icons.refresh),
-            onPressed: _refreshData, // Call _refreshData when button is pressed
+            onPressed: _refreshData,
           ),
         ],
       ),
@@ -45,12 +43,12 @@ class _HomepageState extends State<Homepage> {
               children: [
                 Expanded(
                   child: ListView.builder(
-                    itemCount: state.user.length, // Length of the list of users
+                    itemCount: state.user.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final user = state.user[index]; // Get user at index
+                      final user = state.user[index];
                       return ListTile(
-                        title: Text(user.name), // Display user name
-                        subtitle: Text(user.answer), // Display user answer
+                        title: Text(user.name),
+                        subtitle: Text(user.correctAnswersCount?.toString() ?? 'No count'), // Handle null
                       );
                     },
                   ),

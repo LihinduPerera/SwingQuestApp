@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:swing_quest/dioClient.dart';
-import 'package:swing_quest/models/testModel.dart';
+import 'package:swing_quest/models/userModel.dart';
 
 class ApiClient {
   final DioClient _dioClient;
@@ -10,6 +10,10 @@ class ApiClient {
   Future<List<User>> getAllUsers() async {
     try {
       final response = await _dioClient.get('/api/Users');
+      
+      // Debugging line to print the response
+      print('API Response Data: ${response.data}');
+      
       final List<dynamic> jsonData = response.data;
       return jsonData.map((json) => User.fromJson(json)).toList();
     } catch (e) {

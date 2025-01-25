@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:swing_quest/api_ngrokUrl.dart';
-import 'package:swing_quest/models/testModel.dart';
 import 'package:http/http.dart' as http;
+import 'package:swing_quest/models/userModel.dart';
 
 class ApiHandler {
   final String baseUri = ngrokUrl;
