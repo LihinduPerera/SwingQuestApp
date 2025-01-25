@@ -12,7 +12,6 @@ class UserBloc extends Bloc<UserEvent, UserState> {
       try {
         final users = await userRepository.getAllUsers();
         
-        // Debugging line to log the fetched users
         print('Loaded users: $users');
         
         emit(UserLoaded(user: users)); 

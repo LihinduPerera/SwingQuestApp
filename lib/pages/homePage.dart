@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swing_quest/questionBloc/question_Bloc.dart';
 import 'package:swing_quest/questionBloc/question_state.dart';
-import 'package:swing_quest/questionBloc/question_event.dart'; // Assuming this contains LoadQuestionsEvent
+import 'package:swing_quest/questionBloc/question_event.dart';
 
 class Homepage extends StatefulWidget {
   const Homepage({super.key});
@@ -12,22 +12,28 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  int? selectedAnswer;  // Variable to store the selected answer
-  int questionIndex = 0; // Track which question is displayed
-
+  int? selectedAnswer; 
+  int questionIndex = 0; 
   @override
   void initState() {
     super.initState();
-    // Load the questions when the widget initializes
+    
     context.read<QuestionBloc>().add(LoadQuestionsEvent());
   }
 
-  // To move to the next question
+  
   void _nextQuestion() {
     setState(() {
       questionIndex++;
-      selectedAnswer = null;  // Reset selected answer for the next question
+      selectedAnswer = null;  
     });
+  }
+
+  
+  void _reloadQuestions() {
+    context.read<QuestionBloc>().add(LoadQuestionsEvent());
+    selectedAnswer = 0;
+    questionIndex =0;
   }
 
   @override
@@ -35,6 +41,12 @@ class _HomepageState extends State<Homepage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Swing Quest"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.refresh),
+            onPressed: _reloadQuestions, 
+          ),
+        ],
       ),
       body: BlocBuilder<QuestionBloc, QuestionState>(
         builder: (context, questionState) {
@@ -51,19 +63,19 @@ class _HomepageState extends State<Homepage> {
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text(
-                      question.question,  // Display the question
+                      question.question,  
                       style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
                   ),
                   ...List.generate(4, (i) {
                     return ListTile(
-                      title: Text(question.answers[i]),  // Display the possible answers
+                      title: Text(question.answers[i]),  
                       onTap: () {
                         setState(() {
-                          selectedAnswer = i + 1;  // Save answer index (1, 2, 3, or 4)
+                          selectedAnswer = i + 1;  
                         });
                       },
-                      tileColor: selectedAnswer == i + 1 ? Colors.blue : null,  // Highlight selected answer
+                      tileColor: selectedAnswer == i + 1 ? Colors.blue : null,  
                     );
                   }),
                   ElevatedButton(

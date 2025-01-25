@@ -31,23 +31,21 @@ class MyApp extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          // Provide UserBloc with the correct repository
           BlocProvider<UserBloc>(
             create: (context) => UserBloc(
-              userRepository: context.read<UserRepository>(), // Ensure repository is read from context
+              userRepository: context.read<UserRepository>(), 
             ),
           ),
-          // Provide QuestionBloc with the correct repository
           BlocProvider<QuestionBloc>(
             create: (context) => QuestionBloc(
-              questionRepository: context.read<QuestionRepository>(), // Ensure repository is read from context
+              questionRepository: context.read<QuestionRepository>(), 
             ),
           ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Swing Quest',
-          home: Homepage(), // Make sure Homepage is using the correct context
+          home: Homepage(),
         ),
       ),
     );

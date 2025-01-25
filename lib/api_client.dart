@@ -11,8 +11,7 @@ class ApiClient {
   Future<List<User>> getAllUsers() async {
     try {
       final response = await _dioClient.get('/api/Users');
-      
-      // Debugging line to print the response
+
       print('API Response Data: ${response.data}');
       
       final List<dynamic> jsonData = response.data;
@@ -27,7 +26,6 @@ class ApiClient {
     try {
       final response = await _dioClient.get('/api/Questions');  // Replace with actual endpoint
 
-      // Debugging line to print the response
       print('API Response Data: ${response.data}');
       
       final List<dynamic> jsonData = response.data;

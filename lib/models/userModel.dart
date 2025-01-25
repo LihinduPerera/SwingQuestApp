@@ -2,7 +2,7 @@ class User {
   int? userId;
   String name;
   String password;
-  int? correctAnswersCount; // Change this to match the API's field name
+  int? correctAnswersCount; 
 
   User({
     required this.userId,
@@ -15,13 +15,13 @@ class User {
     userId: json['userId'],
     name: json['name'],
     password: json['password'],
-    correctAnswersCount: json['correctAnswersCount'], // Updated field name
+    correctAnswersCount: json['correctAnswersCount'], 
   );
 
   Map<String, dynamic> toJson() => {
     "userId": userId,
     "name": name,
     "password": password,
-    "correctAnswersCount": correctAnswersCount, // Updated field name
+    "correctAnswersCount": correctAnswersCount,
   };
 }

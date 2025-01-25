@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:swing_quest/models/questionModel.dart'; // Adjust import according to your file structure
+import 'package:swing_quest/models/questionModel.dart';
 
 abstract class QuestionState extends Equatable {
   @override

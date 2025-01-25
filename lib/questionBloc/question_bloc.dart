@@ -1,7 +1,7 @@
-import 'package:flutter_bloc/flutter_bloc.dart'; // Adjust import according to your file structure
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:swing_quest/questionBloc/repository/questionRepository.dart';
 import 'question_event.dart';
-import 'question_state.dart';// Adjust import according to your file structure
+import 'question_state.dart';
 
 class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
   final QuestionRepository questionRepository;
@@ -12,7 +12,6 @@ class QuestionBloc extends Bloc<QuestionEvent, QuestionState> {
       try {
         final questions = await questionRepository.getQuestions();
         
-        // Shuffle the questions to get random ones, and take the first 10
         questions.shuffle();
         emit(QuestionLoaded(questions: questions.take(10).toList()));
       } catch (e) {
