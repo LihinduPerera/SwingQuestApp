@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:provider/provider.dart';
 import 'package:swing_quest/api_client.dart';
 import 'package:swing_quest/dioClient.dart';
 import 'package:swing_quest/pages/homePage.dart';
@@ -31,6 +32,9 @@ class MyApp extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
+          Provider<ApiClient>(
+          create: (_) => ApiClient(dioClient: DioClient()),
+        ),
           BlocProvider<UserBloc>(
             create: (context) => UserBloc(
               userRepository: context.read<UserRepository>(), 
