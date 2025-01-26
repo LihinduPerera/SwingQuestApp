@@ -69,4 +69,51 @@ class ApiClient {
     throw Exception('Failed to update correct answers count');
   }
 }
+
+Future<User> registerUser(String name, String password) async {
+    try {
+      final response = await _dioClient.put(
+        '/api/Users',
+        data: {
+          'name': name,
+          'password': password,
+        },
+      );
+      return User.fromJson(response.data);
+    } catch (e) {
+      throw Exception('Error registering user: $e');
+    }
+  }
+
+  // New method for logging in a user
+  Future<User?> loginUser(String username, String password) async {
+  try {
+    // Send a GET request to fetch users based on the username and password
+    final response = await _dioClient.get(
+      '/api/Users?name=$username&password=$password',
+    );
+
+    // Check if the response is not empty
+    if (response.data.isEmpty) {
+      // No users found for the given credentials, return null
+      return null;
+    }
+
+    // Iterate over all the users returned
+    for (var userData in response.data) {
+      // Check if the username and password match
+      if (userData['name'] == username && userData['password'] == password) {
+        // If valid user, return the User object
+        return User.fromJson(userData);
+      }
+    }
+
+    // If no match is found, return null
+    return null;
+  } catch (e) {
+    print("Error during login: $e");
+    return null; // Return null if any error occurs during the API call
+  }
+}
+
 }

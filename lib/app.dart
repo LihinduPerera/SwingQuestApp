@@ -3,7 +3,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:swing_quest/api_client.dart';
 import 'package:swing_quest/dioClient.dart';
+import 'package:swing_quest/models/userModel.dart';
 import 'package:swing_quest/pages/homePage.dart';
+import 'package:swing_quest/pages/loginPage.dart';
+import 'package:swing_quest/pages/signUpPage.dart';
 import 'package:swing_quest/questionBloc/question_Bloc.dart';
 import 'package:swing_quest/questionBloc/repository/questionRepository.dart';
 import 'package:swing_quest/userBloc/repository/userRepository.dart';
@@ -32,24 +35,26 @@ class MyApp extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          Provider<ApiClient>(
-          create: (_) => ApiClient(dioClient: DioClient()),
-        ),
+          Provider<ApiClient>(create: (_) => ApiClient(dioClient: dioClient)),
           BlocProvider<UserBloc>(
-            create: (context) => UserBloc(
-              userRepository: context.read<UserRepository>(), 
-            ),
+            create: (context) => UserBloc(userRepository: context.read<UserRepository>()),
           ),
           BlocProvider<QuestionBloc>(
-            create: (context) => QuestionBloc(
-              questionRepository: context.read<QuestionRepository>(), 
-            ),
+            create: (context) => QuestionBloc(questionRepository: context.read<QuestionRepository>()),
           ),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'Swing Quest',
-          home: Homepage(),
+          initialRoute: '/login',
+          routes: {
+            '/login': (context) => LoginPage(apiClient: apiClient),
+            '/signup': (context) => SignUpPage(apiClient: apiClient),
+            '/homepage': (context) {
+              final User currentUser = ModalRoute.of(context)!.settings.arguments as User;
+              return Homepage(currentUser: currentUser); // Pass currentUser to Homepage
+            },
+          },
         ),
       ),
     );

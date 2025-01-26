@@ -8,10 +8,12 @@ import 'package:swing_quest/questionBloc/question_state.dart';
 import 'package:swing_quest/questionBloc/question_event.dart';
 
 class Homepage extends StatefulWidget {
-  const Homepage({super.key});
+  final User currentUser;
+
+  const Homepage({required this.currentUser, Key? key}) : super(key: key);
 
   @override
-  State<Homepage> createState() => _HomepageState();
+  _HomepageState createState() => _HomepageState();
 }
 
 class _HomepageState extends State<Homepage> {
@@ -25,27 +27,22 @@ class _HomepageState extends State<Homepage> {
   @override
   void initState() {
     super.initState();
-    _hostingStatusNotifier = ValueNotifier(false); // Initialize to false initially
+    currentUser = widget.currentUser; // Initialize currentUser from widget's props
+    _hostingStatusNotifier = ValueNotifier(false);
     context.read<QuestionBloc>().add(LoadQuestionsEvent());
-    _getCurrentUser();
     _startAutomaticRefresh();
-  }
-
-  Future<void> _getCurrentUser() async {
-    // Assuming a user is fetched or set here
-    currentUser = User(userId: 1, name: "John Doe", password: "password", correctAnswersCount: 0);
   }
 
   @override
   void dispose() {
-    _hostingStatusNotifier.dispose(); // Dispose of the notifier
+    _hostingStatusNotifier.dispose();
     _hostingStatusTimer?.cancel();
     super.dispose();
   }
 
   Future<void> _refreshHostingStatus() async {
     bool hostingStatus = await context.read<ApiClient>().getHostingStatus();
-    _hostingStatusNotifier.value = hostingStatus; // Update the notifier value
+    _hostingStatusNotifier.value = hostingStatus;
   }
 
   void _startAutomaticRefresh() {
@@ -55,7 +52,6 @@ class _HomepageState extends State<Homepage> {
   }
 
   Future<void> _updateCorrectAnswersCount() async {
-    // Dynamically use the current user id and correct answers count
     await context.read<ApiClient>().updateUserCorrectAnswersCount(currentUser.userId!, correctAnswers);
   }
 
@@ -72,7 +68,7 @@ class _HomepageState extends State<Homepage> {
       selectedAnswer = null;
     });
 
-    await _updateCorrectAnswersCount();  // Update correct answers count after each question
+    await _updateCorrectAnswersCount();
   }
 
   void _reloadQuestions() {
@@ -100,7 +96,7 @@ class _HomepageState extends State<Homepage> {
         ],
       ),
       body: ValueListenableBuilder<bool>(
-        valueListenable: _hostingStatusNotifier, // Listen to the hosting status changes
+        valueListenable: _hostingStatusNotifier,
         builder: (context, hostingStatus, child) {
           if (hostingStatus) {
             return BlocBuilder<QuestionBloc, QuestionState>(
