@@ -85,7 +85,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Swing Quest", style: TextStyle(fontSize: 24)),
+        title: Text("Swing Quest", style: TextStyle(fontSize: 24, color: Colors.white),),
         backgroundColor: Colors.deepPurple,
         actions: [
           IconButton(
@@ -196,7 +196,7 @@ class _HomepageState extends State<Homepage> {
               },
             );
           } else {
-            return Center(child: Text('Hosting is not active. Please try again later.', style: TextStyle(fontSize: 18, color: Colors.red)));
+            return Center(child: Text('Hosting is not active 😥📶', style: TextStyle(fontSize: 18, color: Colors.red)));
           }
         },
       ),
