@@ -49,28 +49,24 @@ class ApiClient {
       rethrow;
     }
   }
-  Future<void> updateUserCorrectAnswersCount(int correctAnswers) async {
-    try {
-      final url = Uri.parse(
-          '$ngrokUrl/api/Users/1/correctAnswers'); 
 
-      final response = await http.put(
-        url,
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body:
-            json.encode(correctAnswers), // Send the raw integer value directly
-      );
+  Future<void> updateUserCorrectAnswersCount(int userId, int correctAnswers) async {
+  try {
+    // Directly send the integer instead of wrapping it in a JSON object
+    final response = await _dioClient.put(
+      '/api/Users/$userId/correctAnswers',
+      data: correctAnswers, // Send the value directly
+    );
 
-      if (response.statusCode == 204) {
-        print('Correct answers count updated successfully');
-      } else {
-        throw Exception('Failed to update correct answers count');
-      }
-    } catch (e) {
-      print('Error: $e');
+    if (response.statusCode == 204) {
+      print('Correct answers count updated successfully');
+    } else {
+      print('Failed to update correct answers count');
       throw Exception('Failed to update correct answers count');
     }
+  } catch (e) {
+    print('Error: $e');
+    throw Exception('Failed to update correct answers count');
   }
+}
 }

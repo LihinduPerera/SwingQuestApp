@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:swing_quest/api_ngrokUrl.dart';
 
@@ -14,10 +13,21 @@ class DioClient {
       connectTimeout: const Duration(seconds: 60),
       receiveTimeout: const Duration(seconds: 60),
       sendTimeout: const Duration(seconds: 60),
+      followRedirects: true, // Ensure Dio follows redirects
+      validateStatus: (status) {
+        // Allows Dio to handle 307 and other status codes.
+        return status! < 500;
+      },
     ));
+
     _dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (options, handler) {
+        // Setting the Content-Type header for all requests if it's not set
+        options.headers['Content-Type'] = 'application/json';
+        return handler.next(options);
+      },
       onError: (error, handler) async {
-        return handler.next(error);
+        return handler.next(error); // Optional: Handle custom errors here
       },
     ));
   }
@@ -29,10 +39,16 @@ class DioClient {
       throw await _handleError(e);
     }
   }
-  
+
   Future<Response> put(String path, {data, Options? options}) async {
     try {
       final response = await _dio.put(path, data: data, options: options);
+      if (response.statusCode == 307) {
+        // If the response is a 307 redirect, handle the redirection manually
+        String redirectUrl = response.headers.value('Location')!;
+        final redirectedResponse = await _dio.put(redirectUrl, data: data);
+        return redirectedResponse;
+      }
       return response;
     } catch (e) {
       rethrow;
@@ -44,7 +60,9 @@ class DioClient {
       case DioExceptionType.connectionTimeout:
       case DioExceptionType.sendTimeout:
       case DioExceptionType.receiveTimeout:
-        throw TimeoutException('Connection timed out. Please check your internet connection.', error.requestOptions.connectTimeout);
+        throw TimeoutException(
+            'Connection timed out. Please check your internet connection.',
+            error.requestOptions.connectTimeout);
       case DioExceptionType.connectionError:
         throw const SocketException('No internet connection');
       default:

@@ -32,6 +32,7 @@ class _HomepageState extends State<Homepage> {
   }
 
   Future<void> _getCurrentUser() async {
+    // Assuming a user is fetched or set here
     currentUser = User(userId: 1, name: "John Doe", password: "password", correctAnswersCount: 0);
   }
 
@@ -54,7 +55,8 @@ class _HomepageState extends State<Homepage> {
   }
 
   Future<void> _updateCorrectAnswersCount() async {
-    await context.read<ApiClient>().updateUserCorrectAnswersCount(correctAnswers);
+    // Dynamically use the current user id and correct answers count
+    await context.read<ApiClient>().updateUserCorrectAnswersCount(currentUser.userId!, correctAnswers);
   }
 
   void _nextQuestion() async {
@@ -70,7 +72,7 @@ class _HomepageState extends State<Homepage> {
       selectedAnswer = null;
     });
 
-    await _updateCorrectAnswersCount();
+    await _updateCorrectAnswersCount();  // Update correct answers count after each question
   }
 
   void _reloadQuestions() {
@@ -85,7 +87,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Swing Quest", style: TextStyle(fontSize: 24, color: Colors.white),),
+        title: Text("Swing Quest", style: TextStyle(fontSize: 24, color: Colors.white)),
         backgroundColor: Colors.deepPurple,
         actions: [
           IconButton(
@@ -112,7 +114,7 @@ class _HomepageState extends State<Homepage> {
                     final question = questions[questionIndex];
 
                     return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 60),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
@@ -153,7 +155,7 @@ class _HomepageState extends State<Homepage> {
                               padding: EdgeInsets.symmetric(vertical: 15),
                               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                             ),
-                            child: Text("Next Question", style: TextStyle(fontSize: 18)),
+                            child: Text("Next Question", style: TextStyle(fontSize: 18, color: Colors.white)),
                           ),
                         ],
                       ),
