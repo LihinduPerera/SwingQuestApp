@@ -49,23 +49,10 @@ class ApiClient {
       rethrow;
     }
   }
-
-  // Future<void> updateUserCorrectAnswersCount(int userId, int correctAnswersCount) async {
-  //   try {
-  //     final response = await _dioClient.put(
-  //       '/api/Users/$userId',
-  //       data: {'correctAnswersCount': correctAnswersCount},
-  //     );
-  //     print('User Correct Answers Updated: ${response.data}');
-  //   } catch (e) {
-  //     debugPrint('Error updating user correct answers: $e');
-  //     rethrow;
-  //   }
-  // }
   Future<void> updateUserCorrectAnswersCount(int correctAnswers) async {
     try {
       final url = Uri.parse(
-          '$ngrokUrl/api/Users/1/correctAnswers'); // Use the correct user ID
+          '$ngrokUrl/api/Users/1/correctAnswers'); 
 
       final response = await http.put(
         url,
