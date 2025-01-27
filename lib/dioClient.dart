@@ -13,21 +13,19 @@ class DioClient {
       connectTimeout: const Duration(seconds: 60),
       receiveTimeout: const Duration(seconds: 60),
       sendTimeout: const Duration(seconds: 60),
-      followRedirects: true, // Ensure Dio follows redirects
+      followRedirects: true, 
       validateStatus: (status) {
-        // Allows Dio to handle 307 and other status codes.
         return status! < 500;
       },
     ));
 
     _dio.interceptors.add(InterceptorsWrapper(
       onRequest: (options, handler) {
-        // Setting the Content-Type header for all requests if it's not set
         options.headers['Content-Type'] = 'application/json';
         return handler.next(options);
       },
       onError: (error, handler) async {
-        return handler.next(error); // Optional: Handle custom errors here
+        return handler.next(error); 
       },
     ));
   }
