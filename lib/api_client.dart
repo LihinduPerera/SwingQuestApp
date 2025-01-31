@@ -28,8 +28,7 @@ class ApiClient {
 
   Future<List<Question>> getQuestions() async {
     try {
-      final response = await _dioClient
-          .get('/api/Questions');
+      final response = await _dioClient.get('/api/Questions');
 
       print('API Response Data: ${response.data}');
 
@@ -50,26 +49,27 @@ class ApiClient {
     }
   }
 
-  Future<void> updateUserCorrectAnswersCount(int userId, int correctAnswers) async {
-  try {
-    final response = await _dioClient.put(
-      '/api/Users/$userId/correctAnswers',
-      data: correctAnswers, 
-    );
+  Future<void> updateUserCorrectAnswersCount(
+      int userId, int correctAnswers) async {
+    try {
+      final response = await _dioClient.put(
+        '/api/Users/$userId/correctAnswers',
+        data: correctAnswers,
+      );
 
-    if (response.statusCode == 204) {
-      print('Correct answers count updated successfully');
-    } else {
-      print('Failed to update correct answers count');
+      if (response.statusCode == 204) {
+        print('Correct answers count updated successfully');
+      } else {
+        print('Failed to update correct answers count');
+        throw Exception('Failed to update correct answers count');
+      }
+    } catch (e) {
+      print('Error: $e');
       throw Exception('Failed to update correct answers count');
     }
-  } catch (e) {
-    print('Error: $e');
-    throw Exception('Failed to update correct answers count');
   }
-}
 
-Future<User> registerUser(String name, String password) async {
+  Future<User> registerUser(String name, String password) async {
     try {
       final response = await _dioClient.put(
         '/api/Users',
@@ -85,25 +85,24 @@ Future<User> registerUser(String name, String password) async {
   }
 
   Future<User?> loginUser(String username, String password) async {
-  try {
-    final response = await _dioClient.get(
-      '/api/Users?name=$username&password=$password',
-    );
+    try {
+      final response = await _dioClient.get(
+        '/api/Users?name=$username&password=$password',
+      );
 
-    if (response.data.isEmpty) {
+      if (response.data.isEmpty) {
+        return null;
+      }
+      for (var userData in response.data) {
+        if (userData['name'] == username && userData['password'] == password) {
+          return User.fromJson(userData);
+        }
+      }
+
+      return null;
+    } catch (e) {
+      print("Error during login: $e");
       return null;
     }
-    for (var userData in response.data) {
-      if (userData['name'] == username && userData['password'] == password) {
-        return User.fromJson(userData);
-      }
-    }
-
-    return null;
-  } catch (e) {
-    print("Error during login: $e");
-    return null; 
   }
-}
-
 }
